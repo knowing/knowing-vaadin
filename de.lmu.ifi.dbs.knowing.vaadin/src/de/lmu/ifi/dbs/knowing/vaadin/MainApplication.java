@@ -1,5 +1,8 @@
 package de.lmu.ifi.dbs.knowing.vaadin;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import akka.actor.TypedActor;
 import akka.actor.TypedActorFactory;
 
@@ -8,14 +11,18 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
+import de.lmu.ifi.dbs.knowing.vaadin.components.DPUSelection;
+import de.lmu.ifi.dbs.knowing.vaadin.ui.ComponentFactory;
 import de.lmu.ifi.dbs.knowing.vaadin.ui.VaadinUIFactory;
 import de.lmu.ifi.dbs.knowing.core.factory.*;
 
@@ -23,8 +30,12 @@ public class MainApplication extends Application {
 
 	private Window main;
 	private VerticalLayout mainLayout;
+	final Panel contentPanel = new Panel();
+	
 	private MenuBar.MenuItem homeMenu;
 	private Window aboutWindow;
+	
+	private final Logger logger = LoggerFactory.getLogger(MainApplication.class);
 
 	@Override
 	public void init() {
@@ -36,6 +47,14 @@ public class MainApplication extends Application {
 
 		mainLayout.setSizeFull();
 		mainLayout.addComponent(getMenu());
+		
+		HorizontalLayout content = new HorizontalLayout();
+		contentPanel.setSizeFull();
+		content.setSizeFull();
+		content.addComponent(contentPanel);
+		
+		mainLayout.addComponent(content);
+		mainLayout.setExpandRatio(content, 1);
 
 		TypedActor.newInstance(UIFactory.class, new TypedActorFactory() {
 			@Override
@@ -55,6 +74,8 @@ public class MainApplication extends Application {
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 				main.showNotification("Run your own DPU soon!");
+				contentPanel.removeAllComponents();
+				contentPanel.addComponent(new DPUSelection());
 			}
 		});
 
@@ -62,6 +83,8 @@ public class MainApplication extends Application {
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 				main.showNotification("See what you can do soon");
+				contentPanel.removeAllComponents();
+				contentPanel.addComponent(ComponentFactory.processorTable());
 			}
 		});
 

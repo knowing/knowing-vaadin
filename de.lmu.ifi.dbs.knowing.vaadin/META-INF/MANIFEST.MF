@@ -7,6 +7,8 @@ Bundle-Activator: de.lmu.ifi.dbs.knowing.vaadin.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.osgi.framework;version="1.5.0",
+ org.osgi.util.tracker;version="1.4.0",
+ org.slf4j;version="1.5.11",
  scala;version="2.9.0.1",
  scala.collection;version="2.9.0.1",
  scala.collection.generic;version="2.9.0.1",

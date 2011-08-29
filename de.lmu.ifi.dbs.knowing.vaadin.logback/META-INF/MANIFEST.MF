@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Knowing Vaadin Logback
+Bundle-SymbolicName: de.lmu.ifi.dbs.knowing.vaadin.logback
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: ch.qos.logback.classic;bundle-version="0.9.29"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
