@@ -1,5 +1,6 @@
 package de.lmu.ifi.dbs.knowing.vaadin;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -16,6 +17,7 @@ public class Activator implements BundleActivator {
 	
 	private static ServiceTracker directoryTracker;
 	private static ServiceTracker dpuProviderTracker;
+	private static ServiceTracker evaluateTracker;
 
 	static BundleContext getContext() {
 		return context;
@@ -28,9 +30,13 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 		directoryTracker = new ServiceTracker(context, IFactoryDirectory.class.getName(), null);
-		dpuProviderTracker = new ServiceTracker(context, IDPUProvider.class.getName(), null);
 		directoryTracker.open();
+		
+		dpuProviderTracker = new ServiceTracker(context, IDPUProvider.class.getName(), null);
 		dpuProviderTracker.open();
+		
+		evaluateTracker = new ServiceTracker(context, IEvaluateService.class.getName(), null);
+		evaluateTracker.open();
 	}
 
 	/*
@@ -43,11 +49,19 @@ public class Activator implements BundleActivator {
 		
 		dpuProviderTracker.close();
 		dpuProviderTracker = null;
+		
+		evaluateTracker.close();
+		evaluateTracker = null;
+		
 		Activator.context = null;
 	}
 	
 	public static IFactoryDirectory getFactoryDirectory() {
 		return (IFactoryDirectory) directoryTracker.getService();
+	}
+	
+	public static IEvaluateService getEvaluateService() {
+		return (IEvaluateService) evaluateTracker.getService();
 	}
 	
 	public static IDPUProvider[] getDPUProviders() {
@@ -67,6 +81,24 @@ public class Activator implements BundleActivator {
 				returns.add(dpu);
 		}
 		return (DataProcessingUnit[]) returns.toArray(new DataProcessingUnit[returns.size()]);
+	}
+	
+	public static DataProcessingUnit getRegisteredDPU(String name) {
+		for(Object service : dpuProviderTracker.getServices()) {
+			IDPUProvider provider = (IDPUProvider) service;
+			DataProcessingUnit dpu = provider.getDataProcessingUnit(name);
+			if(dpu != null) return dpu;
+		}
+		return null;
+	}
+	
+	public static URL getRegisteredDPUPath(String name) {
+		for(Object service : dpuProviderTracker.getServices()) {
+			IDPUProvider provider = (IDPUProvider) service;
+			URL url = provider.getURL(name);
+			if(url != null) return url;
+		}
+		return null;
 	}
 
 }

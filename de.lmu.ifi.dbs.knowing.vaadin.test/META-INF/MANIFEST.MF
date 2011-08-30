@@ -1,15 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Vaadin
-Bundle-SymbolicName: de.lmu.ifi.dbs.knowing.vaadin
+Bundle-Name: Test
+Bundle-SymbolicName: de.lmu.ifi.dbs.knowing.vaadin.test
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: de.lmu.ifi.dbs.knowing.vaadin.Activator
-Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: de.lmu.ifi.dbs.knowing.core;bundle-version="1.0.0",
+ de.lmu.ifi.dbs.knowing.vaadin;bundle-version="1.0.0"
 Import-Package: org.osgi.framework;version="1.5.0",
- org.osgi.util.tracker;version="1.4.0",
- org.slf4j;version="1.5.11",
+ org.osgi.service.cm;version="1.2.1",
  scala;version="2.9.0.1",
+ scala.actors.scheduler;version="2.9.0.1",
+ scala.annotation;version="2.9.0.1",
+ scala.annotation.target;version="2.9.0.1",
+ scala.annotation.unchecked;version="2.9.0.1",
  scala.collection;version="2.9.0.1",
  scala.collection.generic;version="2.9.0.1",
  scala.collection.immutable;version="2.9.0.1",
@@ -18,6 +21,7 @@ Import-Package: org.osgi.framework;version="1.5.0",
  scala.collection.parallel;version="2.9.0.1",
  scala.collection.parallel.immutable;version="2.9.0.1",
  scala.collection.parallel.mutable;version="2.9.0.1",
+ scala.collection.script;version="2.9.0.1",
  scala.concurrent;version="2.9.0.1",
  scala.concurrent.forkjoin;version="2.9.0.1",
  scala.io;version="2.9.0.1",
@@ -27,13 +31,9 @@ Import-Package: org.osgi.framework;version="1.5.0",
  scala.reflect;version="2.9.0.1",
  scala.reflect.generic;version="2.9.0.1",
  scala.runtime;version="2.9.0.1",
- scala.text;version="2.9.0.1",
- scala.util.control;version="2.9.0.1",
+ scala.util;version="2.9.0.1",
  scala.util.grammar;version="2.9.0.1",
  scala.util.logging;version="2.9.0.1",
- scala.util.matching;version="2.9.0.1",
- scala.util.regexp;version="2.9.0.1",
- scala.xml;version="2.9.0.1"
-Require-Bundle: com.vaadin;bundle-version="6.6.3",
- de.lmu.ifi.dbs.knowing.core;bundle-version="1.0.0"
-Service-Component: OSGI-INF/vaadinMain.xml, OSGI-INF/tablePresenter.xml
+ scala.util.matching;version="2.9.0.1"
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: de.lmu.ifi.dbs.knowing.vaadin.test.Activator

@@ -36,6 +36,8 @@ public class MainApplication extends Application {
 	private Window aboutWindow;
 	
 	private final Logger logger = LoggerFactory.getLogger(MainApplication.class);
+	
+	public static UIFactory uiFactory;
 
 	@Override
 	public void init() {
@@ -56,7 +58,7 @@ public class MainApplication extends Application {
 		mainLayout.addComponent(content);
 		mainLayout.setExpandRatio(content, 1);
 
-		TypedActor.newInstance(UIFactory.class, new TypedActorFactory() {
+		uiFactory = TypedActor.newInstance(UIFactory.class, new TypedActorFactory() {
 			@Override
 			public TypedActor create() {
 				return new VaadinUIFactory(main);
@@ -73,7 +75,6 @@ public class MainApplication extends Application {
 		homeMenu.addItem("Run Process", new Command() {
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				main.showNotification("Run your own DPU soon!");
 				contentPanel.removeAllComponents();
 				contentPanel.addComponent(new DPUSelection());
 			}
@@ -82,7 +83,6 @@ public class MainApplication extends Application {
 		homeMenu.addItem("Show Services", new Command() {
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				main.showNotification("See what you can do soon");
 				contentPanel.removeAllComponents();
 				contentPanel.addComponent(ComponentFactory.processorTable());
 			}
