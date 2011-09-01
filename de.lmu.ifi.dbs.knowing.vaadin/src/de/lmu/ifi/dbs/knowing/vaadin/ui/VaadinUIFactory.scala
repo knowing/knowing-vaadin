@@ -11,9 +11,11 @@ import com.vaadin.ui.Panel
 
 class VaadinUIFactory(mainWindow: Window) extends TypedActor with UIFactory {
 
+  private var window: Window = _
+  
   def createContainer(node: Node): Object = {
     mainWindow.getApplication.synchronized {
-      val window = new Window
+      window = new Window
       window.setWidth(700)
       window.setHeight(450)
       window.setPositionX(100)
@@ -28,7 +30,15 @@ class VaadinUIFactory(mainWindow: Window) extends TypedActor with UIFactory {
 
   }
 
-  def update(actor: ActorRef, status: Status) = {}
+  def update(actor: ActorRef, status: Status) {
+    //Handle special status events
+    status match {
+      case UpdateUI() => mainWindow.synchronized(window.bringToFront)
+      case Shutdown() => 
+      case _ =>
+    }
+
+  }
 
   def setSupervisor(supervisor: ActorRef) = {}
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DataProcessingUnit name="iris-url-10fold-cross-validation">
-	<description>Cross Validation with NaiveBayes output to TablePresenter
+	<description>Cross Validation with NaiveBayes output to TablePresenter. Input from URL: http://www.hakank.org/weka/iris.arff
 	</description>
 	<tags>Cross, Validation, Cross Validation, ARFF, NaiveBayes, Filter</tags>
 	<nodes>
