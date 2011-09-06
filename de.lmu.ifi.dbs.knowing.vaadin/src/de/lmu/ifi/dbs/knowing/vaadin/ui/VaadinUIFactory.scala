@@ -5,15 +5,15 @@ import akka.actor.TypedActor
 import akka.event.EventHandler.{ debug, info, warning, error }
 import de.lmu.ifi.dbs.knowing.core.events._
 import de.lmu.ifi.dbs.knowing.core.factory.UIFactory
-import de.lmu.ifi.dbs.knowing.core.graph.Node
 import com.vaadin.ui.Window
 import com.vaadin.ui.Panel
+import de.lmu.ifi.dbs.knowing.core.model.INode
 
 class VaadinUIFactory(mainWindow: Window) extends TypedActor with UIFactory {
 
   private var window: Window = _
   
-  def createContainer(node: Node): Object = {
+  def createContainer(node: INode): Object = {
     mainWindow.getApplication.synchronized {
       window = new Window
       window.setWidth(700)

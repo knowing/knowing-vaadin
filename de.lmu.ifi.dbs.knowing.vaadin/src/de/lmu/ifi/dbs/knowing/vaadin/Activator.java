@@ -8,8 +8,8 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
+import de.lmu.ifi.dbs.knowing.core.model.IDataProcessingUnit;
 import de.lmu.ifi.dbs.knowing.core.service.*;
-import de.lmu.ifi.dbs.knowing.core.graph.xml.*;
 
 public class Activator implements BundleActivator {
 
@@ -72,21 +72,21 @@ public class Activator implements BundleActivator {
 		return returns;
 	}
 	
-	public static DataProcessingUnit[] getRegisteredDPUs() {
-		LinkedList<DataProcessingUnit> returns = new LinkedList<DataProcessingUnit>();
+	public static IDataProcessingUnit[] getRegisteredDPUs() {
+		LinkedList<IDataProcessingUnit> returns = new LinkedList<IDataProcessingUnit>();
 		for(Object service : dpuProviderTracker.getServices()) {
 			IDPUProvider provider = (IDPUProvider) service;
-			DataProcessingUnit[] dpus = provider.getDataProcessingUnits();
-			for(DataProcessingUnit dpu : dpus) 
+			IDataProcessingUnit[] dpus = provider.getDataProcessingUnits();
+			for(IDataProcessingUnit dpu : dpus) 
 				returns.add(dpu);
 		}
-		return (DataProcessingUnit[]) returns.toArray(new DataProcessingUnit[returns.size()]);
+		return (IDataProcessingUnit[]) returns.toArray(new IDataProcessingUnit[returns.size()]);
 	}
 	
-	public static DataProcessingUnit getRegisteredDPU(String name) {
+	public static IDataProcessingUnit getRegisteredDPU(String name) {
 		for(Object service : dpuProviderTracker.getServices()) {
 			IDPUProvider provider = (IDPUProvider) service;
-			DataProcessingUnit dpu = provider.getDataProcessingUnit(name);
+			IDataProcessingUnit dpu = provider.getDataProcessingUnit(name);
 			if(dpu != null) return dpu;
 		}
 		return null;

@@ -18,8 +18,8 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window.Notification;
 
-import de.lmu.ifi.dbs.knowing.core.graph.xml.DataProcessingUnit;
-import de.lmu.ifi.dbs.knowing.core.graph.*;
+import de.lmu.ifi.dbs.knowing.core.model.IDataProcessingUnit;
+import de.lmu.ifi.dbs.knowing.core.model.INode;
 import de.lmu.ifi.dbs.knowing.core.service.IEvaluateService;
 import de.lmu.ifi.dbs.knowing.vaadin.Activator;
 import de.lmu.ifi.dbs.knowing.vaadin.MainApplication;
@@ -30,7 +30,7 @@ public class DPUSelection extends CustomComponent {
 	private GridLayout mainLayout;
 	private Table dpuTable;
 	
-	private DataProcessingUnit currentDPU;
+	private IDataProcessingUnit currentDPU;
 	private TextArea tDescription;
 	private Table nodesTable;
 
@@ -108,7 +108,7 @@ public class DPUSelection extends CustomComponent {
 					mainLayout.getWindow().showNotification("Select a DPU" , Notification.TYPE_ERROR_MESSAGE);
 					return;
 				}
-				URL execPath = Activator.getRegisteredDPUPath(currentDPU.name());
+				URL execPath = Activator.getRegisteredDPUPath(currentDPU.getName().getContent());
 		    	IEvaluateService evaluateService = Activator.getEvaluateService();
 		    	try {
 					evaluateService.evaluate(currentDPU, MainApplication.uiFactory, execPath.toURI());
@@ -140,16 +140,15 @@ public class DPUSelection extends CustomComponent {
 		    		return;
 		    	}
 		    	tDescription.setReadOnly(false);
-		    	tDescription.setValue(currentDPU.description());
+		    	tDescription.setValue(currentDPU.getDescription());
 		    	tDescription.setReadOnly(true);
 		    	nodesTable.removeAllItems();
-		    	Node[] nodes = currentDPU.nodes();
 		    	int i = 0;
-		    	for(Node node : nodes) {
+		    	for(INode node : currentDPU.getNodes()) {
 		    		String[] content = new String[3];
-		    		content[0] = node.id();
-		    		content[1] = node.nodeType();
-		    		content[2] = node.factoryId();
+		    		content[0] = node.getId().getContent();
+		    		content[1] = node.getType().getText();
+		    		content[2] = node.getFactoryId().getText();
 		    		nodesTable.addItem(content, i++);
 		    	}
 		    }

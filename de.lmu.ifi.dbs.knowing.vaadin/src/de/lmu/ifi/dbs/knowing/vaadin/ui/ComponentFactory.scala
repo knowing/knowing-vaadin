@@ -22,7 +22,7 @@ object ComponentFactory {
     table.setSelectable(true)
     table.addContainerProperty("Name", classOf[String], "none")
     val dpus = getRegisteredDPUs
-    dpus foreach (dpu => table.addItem(Array(dpu.name), dpu.name))
+    dpus foreach (dpu => table.addItem(Array(dpu.getName.getContent), dpu.getName.getContent))
     table
   }
 }
