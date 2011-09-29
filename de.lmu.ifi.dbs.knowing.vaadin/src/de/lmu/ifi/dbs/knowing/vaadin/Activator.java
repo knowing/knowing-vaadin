@@ -1,23 +1,25 @@
 package de.lmu.ifi.dbs.knowing.vaadin;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.LinkedList;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
 import de.lmu.ifi.dbs.knowing.core.model.IDataProcessingUnit;
-import de.lmu.ifi.dbs.knowing.core.service.*;
+import de.lmu.ifi.dbs.knowing.core.service.IDPUDirectory;
+import de.lmu.ifi.dbs.knowing.core.service.IDPUProvider;
+import de.lmu.ifi.dbs.knowing.core.service.IEvaluateService;
+import de.lmu.ifi.dbs.knowing.core.service.IFactoryDirectory;
+import de.lmu.ifi.dbs.knowing.core.util.DPUUtil;
 
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;
 	
-	private static ServiceTracker directoryTracker;
-	private static ServiceTracker dpuProviderTracker;
-	private static ServiceTracker evaluateTracker;
+	private static ServiceTracker<IFactoryDirectory,IFactoryDirectory> directoryTracker;
+	private static ServiceTracker<IDPUDirectory, IDPUDirectory> dpuDirectoryTracker;
+	private static ServiceTracker<IEvaluateService,IEvaluateService> evaluateTracker;
 
 	static BundleContext getContext() {
 		return context;
@@ -29,13 +31,13 @@ public class Activator implements BundleActivator {
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
-		directoryTracker = new ServiceTracker(context, IFactoryDirectory.class.getName(), null);
+		directoryTracker = new ServiceTracker<IFactoryDirectory, IFactoryDirectory>(context, IFactoryDirectory.class, null);
 		directoryTracker.open();
 		
-		dpuProviderTracker = new ServiceTracker(context, IDPUProvider.class.getName(), null);
-		dpuProviderTracker.open();
+		dpuDirectoryTracker = new ServiceTracker<IDPUDirectory, IDPUDirectory>(context, IDPUDirectory.class, null);
+		dpuDirectoryTracker.open();
 		
-		evaluateTracker = new ServiceTracker(context, IEvaluateService.class.getName(), null);
+		evaluateTracker = new ServiceTracker<IEvaluateService, IEvaluateService>(context, IEvaluateService.class, null);
 		evaluateTracker.open();
 	}
 
@@ -47,8 +49,8 @@ public class Activator implements BundleActivator {
 		directoryTracker.close();
 		directoryTracker = null;
 		
-		dpuProviderTracker.close();
-		dpuProviderTracker = null;
+		dpuDirectoryTracker.close();
+		dpuDirectoryTracker = null;
 		
 		evaluateTracker.close();
 		evaluateTracker = null;
@@ -65,7 +67,7 @@ public class Activator implements BundleActivator {
 	}
 	
 	public static IDPUProvider[] getDPUProviders() {
-		Object[] services = dpuProviderTracker.getServices();
+		Object[] services = dpuDirectoryTracker.getServices();
 		IDPUProvider[] returns = new IDPUProvider[services.length];
 		for(int i=0; i < services.length; i++)
 			returns[i] = (IDPUProvider) services[i];
@@ -73,32 +75,15 @@ public class Activator implements BundleActivator {
 	}
 	
 	public static IDataProcessingUnit[] getRegisteredDPUs() {
-		LinkedList<IDataProcessingUnit> returns = new LinkedList<IDataProcessingUnit>();
-		for(Object service : dpuProviderTracker.getServices()) {
-			IDPUProvider provider = (IDPUProvider) service;
-			IDataProcessingUnit[] dpus = provider.getDataProcessingUnits();
-			for(IDataProcessingUnit dpu : dpus) 
-				returns.add(dpu);
-		}
-		return (IDataProcessingUnit[]) returns.toArray(new IDataProcessingUnit[returns.size()]);
+		return dpuDirectoryTracker.getService().getDPUs();
 	}
 	
 	public static IDataProcessingUnit getRegisteredDPU(String name) {
-		for(Object service : dpuProviderTracker.getServices()) {
-			IDPUProvider provider = (IDPUProvider) service;
-			IDataProcessingUnit dpu = provider.getDataProcessingUnit(name);
-			if(dpu != null) return dpu;
-		}
-		return null;
+		return DPUUtil.getDPU(dpuDirectoryTracker.getService(), name);
 	}
 	
 	public static URL getRegisteredDPUPath(String name) {
-		for(Object service : dpuProviderTracker.getServices()) {
-			IDPUProvider provider = (IDPUProvider) service;
-			URL url = provider.getURL(name);
-			if(url != null) return url;
-		}
-		return null;
+		return DPUUtil.getDPUPath(dpuDirectoryTracker.getService(), name);
 	}
 
 }

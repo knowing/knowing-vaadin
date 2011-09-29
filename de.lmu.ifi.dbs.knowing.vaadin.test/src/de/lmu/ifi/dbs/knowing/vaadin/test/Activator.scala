@@ -7,11 +7,11 @@ import org.osgi.framework.ServiceRegistration
 
 class Activator extends BundleActivator {
 
-  private var dpuService: ServiceRegistration = _
+  private var dpuService: ServiceRegistration[IDPUProvider] = _
 
   def start(context: BundleContext) = {
     Activator.context = context
-    dpuService = context.registerService(classOf[IDPUProvider].getName, BundleDPUProvider.newInstance(context.getBundle), null)
+    dpuService = context.registerService(classOf[IDPUProvider], BundleDPUProvider.newInstance(context.getBundle), null)
   }
 
   def stop(context: BundleContext) = {
