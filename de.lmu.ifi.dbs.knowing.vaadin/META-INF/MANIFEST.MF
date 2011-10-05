@@ -6,7 +6,14 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.lmu.ifi.dbs.knowing.vaadin.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: org.osgi.framework;version="1.5.0",
+Import-Package: org.eclipse.sapphire.java,
+ org.eclipse.sapphire.modeling,
+ org.eclipse.sapphire.modeling.annotations,
+ org.eclipse.sapphire.modeling.serialization,
+ org.eclipse.sapphire.modeling.xml,
+ org.eclipse.sapphire.modeling.xml.annotations,
+ org.eclipse.sapphire.workspace,
+ org.osgi.framework;version="1.5.0",
  org.osgi.util.tracker;version="1.4.0",
  org.slf4j;version="1.5.11",
  scala;version="2.9.0.1",
